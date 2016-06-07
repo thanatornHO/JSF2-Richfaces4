@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+
+<h:head>
+	<h:outputStylesheet>
+        .iinput {
+            max-width: 560px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .rf-p-* { font-size: 16px; }
+        
+        .width {width:150px; white-space:normal!important}
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+	<rich:panel>
+		<h3>Person Info</h3>
+		<h:form id="form1" style="border: 1px solid black;">
+			<h:panelGrid columns="2">
+				<h:outputText value="Book name : " />
+				<rich:inplaceInput id="txtBookName" defaultLabel="click to enter your name" styleClass="iinput" value="#{book.bookName}" style="width: 200px;" />
+				<h:outputText value="Book Desc : " />
+				<rich:inplaceInput id="txtBookDesc" defaultLabel="click to enter your desc" styleClass="iinput" value="#{book.bookDesc}" style="width: 200px;" />
+
+				<h:outputText value="Click for show data" />
+				<h:commandButton value="h tag:Process">
+					<f:ajax execute="txtBookName txtBookDesc" render="insideBooksName insideBooksDesc :form2:showBooksName"/>
+				</h:commandButton>
+
+				<h:outputText value="" />
+				<h:commandButton value="Save Richface + h tag">
+					<a4j:ajax listener="#{userController.insertBook}" execute="@form" render=":dataTableBooks" />
+				</h:commandButton>
+			</h:panelGrid>
+
+			<h3>Show Data ( inside block )</h3>
+			<h:panelGrid columns="2" layout="grid" style="border:0px !important; background:none;">
+				<h:outputText value="Book Name : " />
+				<h:outputText id="insideBooksName" value="#{book.bookName}" />
+
+				<h:outputText value="Book Desc : " />
+				<h:outputText id="insideBooksDesc" value="#{book.bookDesc}" />
+			</h:panelGrid>
+		</h:form>
+
+		<br />
+		<h:form id="form2" style="border: 1px solid black;">
+			<h3>Show Details ( outside block )</h3>
+			<h:panelGrid columns="2" layout="grid" style="border:0px !important; background:none;">
+				<h:outputText value="Book Name : " />
+				<h:outputText id="showBooksName" value="#{book.bookName}" />
+
+				<h:outputText value="Book Desc : " />
+				<h:outputText id="showBooksDesc" value="#{book.bookDesc}" />
+			</h:panelGrid>
+		</h:form>
+		<br />
+
+		<rich:dataTable id="dataTableBooks" var="record" value="#{userController.processBooks()}" style="width:750px; margin: 0 auto;">
+			<f:facet name="caption">
+				<h:outputText value="Show Data Books" />
+			</f:facet>
+
+			<f:facet name="header">
+				<rich:column>
+					<h:outputText value="Book Name" />
+				</rich:column>
+				<rich:column>
+					<h:outputText value="Book Description" />
+				</rich:column>
+			</f:facet>
+
+			<rich:column headerClass="width">
+				<h:outputText value="#{record.bookName}" />
+			</rich:column>
+			<rich:column headerClass="width">
+				<h:outputText value="#{record.bookDesc}" />
+			</rich:column>
+		</rich:dataTable>
+	</rich:panel>
+</h:body>
+</html>
